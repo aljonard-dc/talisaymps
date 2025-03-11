@@ -5,7 +5,6 @@ import { MdMenuOpen } from "react-icons/md";
 import { menuItems } from "@/data";
 
 const SideNav = () => {
-    
   const [isOpen, setIsOpen] = useState(true);
 
   return (
@@ -16,21 +15,33 @@ const SideNav = () => {
     >
       {/* Header */}
       <div
-        className={`px-3 py-2 h-20 flex ${
+        className={`px-3 py-2 h-20 flex items-center transition-all duration-500 ease-in-out ${
           isOpen ? "justify-between" : "justify-center"
-        } items-center`}
+        }`}
       >
-        <img
-          className={`transition-all duration-500 ${
-            isOpen ? "w-14" : "w-0 opacity-0"
+        {/* Logo */}
+        <div
+          className={`relative transition-all duration-500 ease-in-out ${
+            isOpen ? "w-12 h-12 opacity-100" : "w-0 h-0 opacity-0"
           }`}
-          src={"/logo.png"}
-          alt={"logo"}
-        />
+        >
+          <Image src="/logo.png" alt="logo" fill className="object-contain" />
+        </div>
+
+        {/* Title */}
+        <span
+          className={`transition-all duration-500 ease-in-out font-bold overflow-hidden whitespace-nowrap ${
+            isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
+          }`}
+        >
+          Talisay MPS | RIS
+        </span>
+
+        {/* Toggle Button */}
         <MdMenuOpen
           size={50}
           onClick={() => setIsOpen(!isOpen)}
-          className={`rounded-md cursor-pointer hover:bg-blue-300 p-1.5 transition-transform duration-500 ${
+          className={`rounded-md cursor-pointer hover:bg-blue-300 p-1.5 transition-transform duration-500 ease-in-out ${
             isOpen && "rotate-180"
           }`}
         />
@@ -41,23 +52,24 @@ const SideNav = () => {
         {menuItems.map((item, idx) => (
           <li
             key={idx}
-            className={`px-3 py-2 space-x-2 rounded-md hover:bg-blue-400 cursor-pointer flex items-center relative group`}
+            className={`py-2 rounded-md hover:bg-blue-400 cursor-pointer flex items-center relative group transition-all duration-500 ease-in-out ${
+              isOpen ? "px-3 space-x-2" : "px-0 space-x-0 justify-center"
+            }`}
           >
-            <div className="bg-blue-200 rounded-md p-2">{item.icon}</div>
+            <div className="bg-blue-200 rounded-md p-2 transition-all duration-500 ease-in-out">
+              {item.icon}
+            </div>
             <span
-              className={`${
-                !isOpen && "w-0 translate-x-24"
-              } overflow-hidden whitespace-nowrap
-              }`}
+              className={`transition-all duration-500 ease-in-out ${
+                isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
+              } overflow-hidden whitespace-nowrap`}
             >
               {item.label}
             </span>
             <span
-              className={`${
-                isOpen && "hidden"
-              } absolute left-24 shadow-md rounded-md
-              w-0 text-black bg-blue-400 whitespace-nowrap duration-100 overflow-hidden group-hover:w-fit  group-hover:left-24
-             `}
+              className={`absolute left-24 shadow-md rounded-md text-black bg-blue-400 whitespace-nowrap transition-all duration-500 ease-in-out overflow-hidden group-hover:w-fit group-hover:left-24 ${
+                isOpen ? "hidden" : "w-0"
+              }`}
             >
               <span className="p-2">{item.label}</span>
             </span>
