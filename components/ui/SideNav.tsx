@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { MdMenuOpen } from "react-icons/md";
 import { menuItems } from "@/data";
 
@@ -47,32 +48,32 @@ const SideNav = () => {
         />
       </div>
 
-      {/* Body */}
+      {/* Navigation Links */}
       <ul className="p-0 m-0 flex-1">
         {menuItems.map((item, idx) => (
-          <li
-            key={idx}
-            className={`py-2 rounded-md hover:bg-blue-400 cursor-pointer flex items-center relative group transition-all duration-500 ease-in-out ${
-              isOpen ? "px-3 space-x-2" : "px-0 space-x-0 justify-center"
-            }`}
-          >
-            <div className="bg-blue-200 rounded-md p-2 transition-all duration-500 ease-in-out">
-              {item.icon}
-            </div>
-            <span
-              className={`transition-all duration-500 ease-in-out ${
-                isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
-              } overflow-hidden whitespace-nowrap`}
-            >
-              {item.label}
-            </span>
-            <span
-              className={`absolute left-24 shadow-md rounded-md text-black bg-blue-400 whitespace-nowrap transition-all duration-500 ease-in-out overflow-hidden group-hover:w-fit group-hover:left-24 ${
-                isOpen ? "hidden" : "w-0"
+          <li key={idx} className="transition-all duration-500 ease-in-out">
+            <Link
+              href={item.link}
+              className={`flex items-center py-2 rounded-md hover:bg-blue-400 cursor-pointer relative group ${
+                isOpen ? "px-3 space-x-2" : "px-0 space-x-0 justify-center"
               }`}
             >
-              <span className="p-2">{item.label}</span>
-            </span>
+              <div className="bg-blue-200 rounded-md p-2">{item.icon}</div>
+              <span
+                className={`transition-all duration-500 ease-in-out ${
+                  isOpen ? "opacity-100 w-auto" : "opacity-0 w-0"
+                } overflow-hidden whitespace-nowrap`}
+              >
+                {item.label}
+              </span>
+              <span
+                className={`absolute left-24 shadow-md rounded-md text-black bg-blue-400 whitespace-nowrap transition-all duration-500 ease-in-out overflow-hidden group-hover:w-fit group-hover:left-24 ${
+                  isOpen ? "hidden" : "w-0"
+                }`}
+              >
+                <span className="p-2">{item.label}</span>
+              </span>
+            </Link>
           </li>
         ))}
       </ul>
