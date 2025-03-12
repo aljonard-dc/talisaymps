@@ -276,3 +276,11 @@
     @apply bg-background text-foreground;
   }
 }
+input[type="text"], input[type="date"] {
+  @apply text-base text-blue-950 px-2 py-1.5 rounded-md 
+         border-2 border-blue-300 focus:outline-none 
+         focus:border-2 focus:border-blue-500;
+}
+label {
+  @apply text-xs text-blue-950/80
+}
