@@ -11,7 +11,7 @@ export async function createCaseRecord(formData: FormData) {
   const dateFiled = formData.get("dateFiled");
   const criminalCaseNo = formData.get("criminalCaseNo");
   const investigator = formData.get("investigator");
-  const complainants = formData.get("complainant");
+  const complainant = formData.get("complainant");
   const remarks = formData.get("remarks");
 
   if (
@@ -21,18 +21,17 @@ export async function createCaseRecord(formData: FormData) {
     !dateFiled ||
     !criminalCaseNo ||
     !investigator ||
-    !complainants ||
-    !remarks
+    !complainant
   ) {
-    throw new Error("All fields are required");
+    throw new Error("All required fields must be filled");
   }
-
   await pool.query(
     `INSERT INTO "caserecords" 
     ("caseFileNo", respondent, "caseTitle", "dateFiled", "criminalCaseNo", "investigatorOnCase", complainant, remarks) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-    [caseFileNo, respondent, caseTitle, dateFiled, criminalCaseNo, investigator, complainants, remarks]
+    [caseFileNo, respondent, caseTitle, dateFiled, criminalCaseNo, investigator, complainant, remarks || null] // Handle optional value
   );
+  
   revalidatePath("/case-records");
 }
 
