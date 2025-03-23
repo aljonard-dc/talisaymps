@@ -34,16 +34,14 @@ export default function CaseRecordsTable({
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 🔍 Filtered Records (Based on Search)
   const filteredRecords = records.filter(
     (record) =>
       record.respondent.toLowerCase().includes(searchQuery.toLowerCase()) ||
       record.complainant.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // 🔢 Sorted Records
   const sortedRecords = [...filteredRecords].sort((a, b) => {
-    if (!sortColumn) return 0; // No sorting applied
+    if (!sortColumn) return 0;
 
     const valueA = a[sortColumn];
     const valueB = b[sortColumn];
@@ -57,27 +55,26 @@ export default function CaseRecordsTable({
     }
   });
 
-  // 📄 Pagination Logic
   const totalPages = Math.ceil(sortedRecords.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedRecords = sortedRecords.slice(startIndex, startIndex + rowsPerPage);
 
-  // ✅ Selection Handlers
   const handleSelect = (id: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((sid) => sid !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => {
+      const newSelected = prev.includes(id)
+        ? prev.filter((sid) => sid !== id)
+        : [...prev, id];
+      console.log("Selected IDs:", newSelected);
+      return newSelected;
+    });
   };
 
   const handleSelectAll = () => {
-    if (selectedIds.length === paginatedRecords.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(paginatedRecords.map((record) => record.id));
-    }
+    const allIds = filteredRecords.map((record) => record.id);
+    setSelectedIds(selectedIds.length === allIds.length ? [] : allIds);
+    console.log("All Selected IDs:", selectedIds);
   };
 
-  // ⬆️⬇️ Sorting Handler
   const handleSort = (column: keyof CaseRecord) => {
     if (sortColumn === column) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -89,7 +86,6 @@ export default function CaseRecordsTable({
 
   return (
     <div className="p-4">
-      {/* 🔍 Search Bar */}
       <input
         type="text"
         placeholder="Search by Respondent or Complainant..."
@@ -98,7 +94,6 @@ export default function CaseRecordsTable({
         className="w-full p-2 border rounded mb-2"
       />
 
-      {/* 🏷️ Selected Rows & Pagination Controls */}
       <div className="flex justify-between items-center mb-2">
         <span>{selectedIds.length} of {records.length} row(s) selected</span>
         <div>
@@ -120,7 +115,6 @@ export default function CaseRecordsTable({
         </div>
       </div>
 
-      {/* 🗑️ Delete Button */}
       {selectedIds.length > 0 && (
         <button
           onClick={() => onDelete(selectedIds)}
@@ -130,35 +124,20 @@ export default function CaseRecordsTable({
         </button>
       )}
 
-      {/* 📝 Case Records Table */}
       <table className="w-full border-collapse border border-gray-300 mt-4">
         <thead>
           <tr className="bg-gray-200">
             <th className="border p-2">
               <input
                 type="checkbox"
-                checked={selectedIds.length === paginatedRecords.length}
+                checked={selectedIds.length === filteredRecords.length}
                 onChange={handleSelectAll}
               />
             </th>
-            {[
-              { key: "caseFileNo", label: "Case File No." },
-              { key: "respondent", label: "Respondent" },
-              { key: "caseTitle", label: "Case Title" },
-              { key: "dateFiled", label: "Date Filed" },
-              { key: "criminalCaseNo", label: "Criminal Case No." },
-              { key: "investigatorOnCase", label: "Investigator" },
-              { key: "complainant", label: "Complainant" }
-            ].map(({ key, label }) => (
-              <th
-                key={key}
-                className="border p-2 cursor-pointer"
-                onClick={() => handleSort(key as keyof CaseRecord)}
-              >
+            {["caseFileNo", "respondent", "caseTitle", "dateFiled", "criminalCaseNo", "investigatorOnCase", "complainant"].map((key) => (
+              <th key={key} className="border p-2 cursor-pointer" onClick={() => handleSort(key as keyof CaseRecord)}>
                 <div className="flex items-center justify-center">
-                  {label} {sortColumn === key ? (
-                    sortOrder === "asc" ? <TbSortAscending /> : <TbSortDescending />
-                  ) : <FaSort />}
+                  {key} {sortColumn === key ? (sortOrder === "asc" ? <TbSortAscending /> : <TbSortDescending />) : <FaSort />}
                 </div>
               </th>
             ))}
@@ -187,29 +166,6 @@ export default function CaseRecordsTable({
           ))}
         </tbody>
       </table>
-
-      {/* 📄 Pagination Controls */}
-      <div className="flex justify-between items-center mt-4">
-        <span>Page {currentPage} of {totalPages}</span>
-        <div>
-          <button
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="px-4 py-2 border rounded disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="ml-2 px-4 py-2 border rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
-
-
