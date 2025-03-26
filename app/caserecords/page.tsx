@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AddForm from "@/components/AddForm";
 import CaseRecordsTable from "@/components/CaseRecordsTable";
+import AddCaseModal from "@/components/AddCaseModal";
 
 interface CaseRecord {
   id: number;
@@ -14,6 +14,9 @@ interface CaseRecord {
   investigatorOnCase: string;
   complainant: string;
   remarks: string | null;
+  createdAt: string; 
+  updatedAt: string;
+
 }
 
 async function fetchCaseRecords(): Promise<CaseRecord[]> {
@@ -23,7 +26,7 @@ async function fetchCaseRecords(): Promise<CaseRecord[]> {
     return await res.json();
   } catch (error) {
     console.error(error);
-    return []; // Avoid crash
+    return [];
   }
 }
 
@@ -69,7 +72,7 @@ export default function CaseRecordsPage() {
 
   return (
     <main>
-      <AddForm />
+      <AddCaseModal />
       <CaseRecordsTable 
         records={records} 
         onDelete={handleDelete} 
