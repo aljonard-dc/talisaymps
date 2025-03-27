@@ -57,36 +57,31 @@ export default function CaseRecordsTable({
       day: "numeric",
     });
   };
-  const sortedRecords = [...filteredRecords].sort((a, b) => {
-    if (!sortColumn) return 0;
-
-    const valueA = a[sortColumn];
-    const valueB = b[sortColumn];
-
-    // Ensure valueA and valueB are not null or undefined
-    if (["dateFiled", "createdAt", "updatedAt"].includes(sortColumn)) {
-      const dateA = valueA ? new Date(valueA).getTime() : 0;
-      const dateB = valueB ? new Date(valueB).getTime() : 0;
-
-      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
-    }
-
-    // Default sorting logic for numbers and strings
-    if (typeof valueA === "number" && typeof valueB === "number") {
-      return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
-    } else {
-      return sortOrder === "asc"
-        ? String(valueA || "").localeCompare(String(valueB || ""))
-        : String(valueB || "").localeCompare(String(valueA || ""));
-    }
-  });
-
-  const totalPages = Math.ceil(sortedRecords.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredRecords.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedRecords = sortedRecords.slice(
-    startIndex,
-    startIndex + rowsPerPage
-  );
+  const paginatedRecords = filteredRecords
+    .sort((a, b) => {
+      if (!sortColumn) return 0;
+  
+      const valueA = a[sortColumn];
+      const valueB = b[sortColumn];
+  
+      if (["dateFiled", "createdAt", "updatedAt"].includes(sortColumn)) {
+        const dateA = valueA ? new Date(valueA).getTime() : 0;
+        const dateB = valueB ? new Date(valueB).getTime() : 0;
+        return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+      }
+  
+      if (typeof valueA === "number" && typeof valueB === "number") {
+        return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
+      } else {
+        return sortOrder === "asc"
+          ? String(valueA || "").localeCompare(String(valueB || ""))
+          : String(valueB || "").localeCompare(String(valueA || ""));
+      }
+    })
+    .slice(startIndex, startIndex + rowsPerPage);
+  
 
   const handleSelect = (id: number) => {
     setSelectedIds((prev) => {
